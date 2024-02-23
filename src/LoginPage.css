@@ -1,0 +1,27 @@
+form{
+    border-radius: 8px;
+    width:400px;
+    border: 2px solid blue;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin:auto;
+    margin-top: 10pc;
+}
+input{
+    border-radius: 3px;
+}
+label{
+    font-style: italic;
+}
+button{
+    color: white;
+    background-color: black;
+    border-radius: 3px;
+    margin-top: 0.50pc;
+}
+.link{
+    background-color: white;
+    color: black;
+    border: none;
+}
