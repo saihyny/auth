@@ -19,9 +19,14 @@ button{
     background-color: black;
     border-radius: 3px;
     margin-top: 0.50pc;
+    cursor: pointer;
+}
+button:active{
+    background-color:white;
+    color:black;
 }
 .link{
     background-color: white;
-    color: black;
+    color: blue;
     border: none;
 }
