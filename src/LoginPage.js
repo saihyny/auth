@@ -72,23 +72,20 @@ const LoginPage=()=> {
     })
       .then((res) => {
         if (res.ok) {
-          !isnew ? alert('successfully sigup ') :
-          // localStorage.setItem(log,'true')
-          Navigate('/expense')
-          console.log('logged in successfully')
           return res.json();
-         
         } else {
           return res.json().then((data) => {
             let errorMessage = data;
             setError(errorMessage.error.message)
             throw new Error(errorMessage.error.message);
-            
           });
         }
       })
       .then((data) => {
-        setLoggedin(true);
+        localStorage.setItem('login',data.idToken)
+        // console.log(data.idToken)
+        !isnew ? alert('successfully sigup ') :
+        Navigate('/expense')
       })
       .catch((err) => {
         console.log(err)

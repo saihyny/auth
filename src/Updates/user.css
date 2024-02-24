@@ -1,0 +1,6 @@
+.hedding{
+    display: flex;
+    flex-direction: column-reverse;
+    border-bottom: 2px solid gray;
+}
+
