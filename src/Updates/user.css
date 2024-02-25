@@ -3,4 +3,7 @@
     flex-direction: column-reverse;
     border-bottom: 2px solid gray;
 }
-
+.forms{
+    display: flex;
+    margin-left: 10px;
+}
