@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 function Expense() {
   const [selectedOption, setSelectedOption] = useState('Food')
+  const [fetchData,setFetchData] = useState([])
+  const [edit,setEdit] = useState(false);
   const [items, setItems] = useState([]);
   const money = useRef();
   const discription = useRef();
@@ -12,14 +14,19 @@ function Expense() {
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value); // Update the selected option
   };
-  useEffect(() => {
+  const reloadFunc = ()=>{
     axios.get('https://auth-cd5cd-default-rtdb.firebaseio.com/items.json')
     .then((res)=>{
        if(res.data){
         const valuesArray = Object.values(res.data)
+        const keysArray = Object.keys(res.data)
+        setFetchData(keysArray)
         setItems(valuesArray)
        }
     })
+ }
+  useEffect(() => {
+    reloadFunc()
   },[]);
   console.log(items)
   const Navigate = useNavigate();
@@ -40,11 +47,52 @@ function Expense() {
     });
      axios.post('https://auth-cd5cd-default-rtdb.firebaseio.com/items.json',obj)
       .then((res)=>{
-        alert('added')
-          console.log(res.data)
+         if(res.status===200){
+          console.log('post success')
+         }
       })
     
   };
+ 
+  const deleteFunc=(index)=>{
+   
+    const id = fetchData[index]
+    axios.delete(`https://auth-cd5cd-default-rtdb.firebaseio.com/items/${id}.json`)
+    .then((res)=>{
+      if(res.status===200){
+        reloadFunc()
+        const updated = fetchData.filter((item)=>{
+          return item !== id
+        })
+        setFetchData(updated)
+       
+      } 
+    })
+
+
+  }
+  const editFunc=(index)=>{
+    
+    const id = fetchData[index]
+    const spends = selectedOption;
+    const Money = money.current.value;
+    const Discription = discription.current.value;
+
+    const obj = {
+      spe: spends,
+      mon: Money,
+      dis: Discription,
+    };
+    axios.put(`https://auth-cd5cd-default-rtdb.firebaseio.com/items/${id}.json`,obj)
+    .then((res)=>{
+      if(res.status===200){
+        console.log('edited')
+        setEdit(false)
+        reloadFunc()
+      } 
+    })
+  }
+  
   let expense = (
     <div className="items">
       {items.map((item, index) => (
@@ -53,6 +101,23 @@ function Expense() {
             <li>{item.spe}</li>
             <li>{item.mon}</li>
             <li>{item.dis}</li>
+            <div>
+              <button onClick={(e)=>{
+                e.preventDefault()
+                setEdit(true)
+                money.current.focus()
+               }}>Edit</button>
+              {edit && (
+                <button onClick={(e)=>{
+                  e.preventDefault()
+                  editFunc(index) 
+                }}>OK</button>
+              )}
+              {!edit && (<button onClick={(e)=>{
+                e.preventDefault()
+                deleteFunc(index)
+                }}>Delete</button>)}
+            </div>
           </ul>
         </div>
       ))}
@@ -93,6 +158,11 @@ function Expense() {
       <p>Selected Option: {selectedOption}</p>
     </div>
           <button>submit</button>
+          {edit && (
+                <button onClick={(e)=>{
+                  e.preventDefault()
+                  setEdit(false)}}>Done Edit</button>
+              )}
         </form>
       </div>
       <div>
