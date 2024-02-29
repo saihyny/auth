@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./LoginPage.css";
-import Expense from "./ExpenseTracker/Expense";
 import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const Navigate = useNavigate();

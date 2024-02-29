@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router"; 
 import "./user.css";
+
+
 function UserProfile() {
   const [toggle,seToggle] = useState(false);
   const [code,setCode] = useState(false);
@@ -9,6 +11,7 @@ function UserProfile() {
   const name = useRef();
   const url = useRef();
   const Navigate = useNavigate()
+ 
   if (name.current?.value && url.current?.value) {
     
   } else {
