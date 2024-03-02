@@ -1,13 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Expense.css";
+import {  useDispatch,useSelector } from "react-redux";
+import { isLogout } from "../Store/authSlice";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { addItems } from "../Store/expenSlice";
 function Expense() {
+  const dispatch = useDispatch()
   const [selectedOption, setSelectedOption] = useState('Food')
   const [fetchData,setFetchData] = useState([])
   const [edit,setEdit] = useState(false);
   const [items, setItems] = useState([]);
+  const total = useSelector((state)=>state.expenses.total)
+ 
+  
   const money = useRef();
   const discription = useRef();
 
@@ -21,6 +28,7 @@ function Expense() {
         const valuesArray = Object.values(res.data)
         const keysArray = Object.keys(res.data)
         setFetchData(keysArray)
+        dispatch(addItems(valuesArray))
         setItems(valuesArray)
        }
     })
@@ -28,7 +36,6 @@ function Expense() {
   useEffect(() => {
     reloadFunc()
   },[]);
-  console.log(items)
   const Navigate = useNavigate();
   const submitHandler = async (e) => {
      e.preventDefault()
@@ -130,10 +137,11 @@ function Expense() {
         <div className="profile">
           your profile is incomplere<Link to="/user">Complete Now</Link>
         </div>
+        {total>=10000 && <button className="premium">premium</button>}
         <button
           onClick={(e) => {
             e.preventDefault()
-            localStorage.clear("login");
+            dispatch(isLogout())
             Navigate("/");
           }}
         >

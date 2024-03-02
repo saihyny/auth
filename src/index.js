@@ -3,21 +3,16 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Expense from "./ExpenseTracker/Expense";
-import UserProfile from "./Updates/UserProfile";
+
+import { Provider } from "react-redux";
+import store from "./Store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/user" element={<UserProfile/>}/>
-        <Route path="/expense" element={<Expense />} />
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+ 
 );
 
 // If you want to start measuring performance in your app, pass a function

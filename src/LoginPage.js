@@ -1,12 +1,14 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useDispatch,useSelector } from "react-redux";
+import { isLogin } from "./Store/authSlice";
 import "./LoginPage.css";
 import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
+  const dispatch = useDispatch()
   const Navigate = useNavigate();
   const [isnew, setUser] = useState(false);
   const [error, setError] = useState(null);
   const [forgetPass, setForgotpass] = useState(false);
-
   const email_log = useRef();
   const password_log = useRef();
 
@@ -73,8 +75,7 @@ const LoginPage = () => {
         }
       })
       .then((data) => {
-        localStorage.setItem("login", data.idToken);
-        // console.log(data.idToken)
+        dispatch(isLogin(data.idToken))
         !isnew ? alert("successfully sigup ") : Navigate("/expense");
       })
       .catch((err) => {
