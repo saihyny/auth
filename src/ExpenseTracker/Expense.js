@@ -5,13 +5,15 @@ import { isLogout } from "../Store/authSlice";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { addItems } from "../Store/expenSlice";
+import { addItems,theme } from "../Store/expenSlice";
 function Expense() {
   const dispatch = useDispatch()
   const [selectedOption, setSelectedOption] = useState('Food')
   const [fetchData,setFetchData] = useState([])
   const [edit,setEdit] = useState(false);
   const [items, setItems] = useState([]);
+  const [toggle,setToggle] = useState(false)
+  const [mode,setMode] = useState(false)
   const total = useSelector((state)=>state.expenses.total)
  
   
@@ -130,6 +132,36 @@ function Expense() {
       ))}
     </div>
   );
+  const downloadExpenses = () => {
+    // Convert expenses data to CSV format
+    const csvContent = convertToCSV(items);
+    // Create Blob
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    // Create URL for Blob
+    const url = window.URL.createObjectURL(blob);
+    // Create anchor element
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "expenses.csv"; // Set filename
+    // Trigger download
+    a.click();
+    // Cleanup
+    window.URL.revokeObjectURL(url);
+  };
+
+  const convertToCSV = (data) => {
+    const csvRows = [];
+    // Add header row
+    const headers = Object.keys(data[0]);
+    csvRows.push(headers.join(","));
+    // Add data rows
+    data.forEach((row) => {
+      const values = headers.map((header) => row[header]);
+      csvRows.push(values.join(","));
+    });
+    return csvRows.join("\n");
+  };
+
   return (
     <>
       <div className="nav">
@@ -137,7 +169,17 @@ function Expense() {
         <div className="profile">
           your profile is incomplere<Link to="/user">Complete Now</Link>
         </div>
-        {total>=10000 && <button className="premium">premium</button>}
+        {total>=10000 && <button className="premium" onClick={(e)=>{
+          e.preventDefault()
+           setToggle(true)
+        }}>Activate Premium</button>}
+        {
+          toggle && <button onClick={(e)=>{
+            e.preventDefault()
+            setMode(!mode)
+            dispatch(theme())
+          }}>{mode ? 'Dark Mode' : 'white Mode' }</button>
+        }
         <button
           onClick={(e) => {
             e.preventDefault()
@@ -178,6 +220,9 @@ function Expense() {
           <h3>Spend For</h3>
           <h3>Money</h3>
           <h3>Discription</h3>
+          {
+          toggle && <button onClick={downloadExpenses} >download Your expenses</button>
+        }
         </div>
         {expense}
       </div>

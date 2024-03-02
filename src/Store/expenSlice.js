@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   expenses: [],
   total: 0,
+  darkMode:false,
 };
 const expensesSlice = createSlice({
   name: "expenses",
@@ -14,7 +15,10 @@ const expensesSlice = createSlice({
     },
     removeItems: () => {},
     editItems: () => {},
+    theme:(state)=>{
+       state.darkMode=!state.darkMode;
+    }
   },
 });
 export default expensesSlice.reducer;
-export const { addItems, removeItems, editItems } = expensesSlice.actions;
+export const { addItems, removeItems, editItems,theme } = expensesSlice.actions;
